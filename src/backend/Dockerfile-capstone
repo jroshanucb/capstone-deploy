@@ -1,0 +1,40 @@
+FROM ubuntu:18.04
+
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+RUN apt-get update --fix-missing
+RUN apt-get -y install sudo curl bash git
+RUN apt install -y python3-pip
+RUN pip3 install numpy
+RUN pip3 install pandas
+RUN pip3 install flask
+RUN pip3 install CORS
+RUN pip3 install flask_cors
+RUN sudo pip3 install --upgrade pip
+RUN pip3 install psycopg2
+
+RUN  echo "y" | sudo apt-get install python3-dev nginx
+RUN pip3 install gunicorn
+RUN pip3 install pandasql
+
+EXPOSE 8080
+EXPOSE 5000
+
+RUN sudo mkdir /var/www/angular-deploy
+COPY nginx.conf /etc/nginx/
+COPY run_cmd.sh .
+
+#RUN sudo mkdir /app/capstone
+#RUN sudo mkdir /app/capstone/src
+#RUN sudo mkdir /app/capstone/src/backend
+#RUN sudo mkdir /app/capstone/results
+#WORKDIR /app/capstone/src/backend
+#COPY ../../results/event_images_table.csv /app/capstone/results/
+#COPY . /app/capstone/src/backend/
+#COPY ../frontend/dist/newproject/ /var/www/angular-deploy/
+
+RUN git clone https://github.com/jroshanucb/capstone-deploy.git
+WORKDIR /app/capstone-deploy/src/backend
+RUN sudo cp -r /app/capstone-deploy/src/frontend/dist/newproject/* /var/www/angular-deploy/
+RUN sudo gunicorn --bind 0.0.0.0:5000 wsgi:app &
+ENTRYPOINT ["./run_cmd.sh"]
