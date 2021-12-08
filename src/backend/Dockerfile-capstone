@@ -12,18 +12,18 @@ RUN pip3 install CORS
 RUN pip3 install flask_cors
 RUN sudo pip3 install --upgrade pip
 RUN pip3 install psycopg2
+RUN pip3 install gunicorn
+RUN pip3 install pandasql
 
 RUN  echo "y" | sudo apt-get install python3-dev nginx
-RUN pip3 install gunicorn
 
 RUN git clone https://github.com/jroshanucb/capstone-deploy.git
 WORKDIR /app/capstone-deploy/src/backend
 
 RUN sudo mkdir /var/www/angular-deploy
-COPY nginx.conf /etc/nginx/
+RUN sudo cp nginx.conf /etc/nginx/
 COPY run_cmd.sh .
-
-RUN pip3 install pandasql
+RUN sudo chmod +x run_cmd.sh
 
 EXPOSE 8080
 EXPOSE 5000
