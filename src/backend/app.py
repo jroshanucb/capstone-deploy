@@ -122,7 +122,7 @@ def main(cmd_opts):
     global cmd_options
     global data_frame
     cmd_options = cmd_opts
-    print(cmd_options)
+    print(type(cmd_options))
     data_frame = pd.read_csv("../../results/event_images_table.csv")
     app.run(debug=True,host='0.0.0.0')
 
